@@ -7,12 +7,18 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/DouglasLira-Dev/assistente-cli/internal/config"
 )
 
 // jsonOutput controla a saída em JSON para todos os subcomandos.
 // É registrada como flag persistente no comando raiz, então todo
 // subcomando herda --json automaticamente.
 var jsonOutput bool
+
+// cfg é a configuração global do assistente.
+// Carregada uma única vez pelo PersistentPreRunE do comando raiz.
+var cfg *config.Config
 
 // Execute é o ponto de entrada do CLI.
 // Cria o comando raiz, executa e retorna o erro (sem imprimir nada —
@@ -33,6 +39,22 @@ Fluxo principal: artigo → memória → API.
 Consulte artigos locais, faça perguntas ao LLM e reindexe seu acervo.`,
 		SilenceUsage:  true,
 		SilenceErrors: true,
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			// Help e completion não exigem configuração.
+			if cmd.Name() == "help" || cmd.Name() == "completion" {
+				return nil
+			}
+			if help, _ := cmd.Flags().GetBool("help"); help {
+				return nil
+			}
+
+			loaded, err := config.Load()
+			if err != nil {
+				return err
+			}
+			cfg = loaded
+			return nil
+		},
 	}
 
 	// Flag persistente: herdada por todos os subcomandos.
