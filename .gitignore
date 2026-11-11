@@ -1,0 +1,33 @@
+# ============================================
+# Dados pessoais (NUNCA versionar)
+# ============================================
+data/chat.db
+data/events.jsonl
+*.db-journal
+*.db-wal
+
+# ============================================
+# Credenciais e segredos
+# ============================================
+.env
+
+# ============================================
+# Artefatos de build
+# ============================================
+# Binários compilados na raiz.
+# NÃO criar pasta chamada "assistente" na raiz do repo.
+/assistente
+/assistente-cli
+dist/
+
+# ============================================
+# IDE / Editor
+# ============================================
+.idea/
+.vscode/
+*.swp
+
+# ============================================
+# Sistema operacional
+# ============================================
+.DS_Store
